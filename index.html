@@ -1,10 +1,10 @@
-<!-- BlockQuest for Rooh – v11: Re-add Rooh calls & softer male TTS -->
+<!-- BlockQuest for Rooh – v12: Fixed TTS Loading with Softer Male Voice -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BlockQuest for Rooh v11</title>
+  <title>BlockQuest for Rooh v12</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
     :root { --primary:#3c5c1d; --accent:#fdd835; --bg-sky:#81d4fa; --bg-block:#8d6e63; --correct:#a5d6a7; --wrong:#ef9a9a; }
@@ -86,4 +86,29 @@
     function start(){rescued=0;update();const l=levels[i];lbl.textContent=`Level ${i+1}`;banner.textContent=`Rooh, find ${l.pattern} blocks`;build(l);showTut(l);msg.style.display='none';grid.style.display='none';}
     function build(l){grid.innerHTML='';shuffle([...l.correct,...l.distractors]).forEach(w=>{const c=document.createElement('div');c.className='card';c.textContent=w;c.onclick=()=>tap(c,w,l);grid.appendChild(c);});}
     function tap(c,w,l){if(c.dataset.lock)return;if(l.correct.includes(w)){c.classList.add('correct');c.dataset.lock=1;speak(`Correct, Rooh! ${w}`);rescued++;update();if(rescued===l.correct.length){rewards++;give();}}else{c.classList.add('wrong');speak('Oops, try again Rooh');setTimeout(()=>c.classList.remove('wrong'),600);}}
-    function give(){mode='reward';const r=levels[i].reward;title.textContent='Great job, Rooh!';text.innerHTML=`You earned:<br><span style=\
+    function give(){mode='reward';const r=levels[i].reward;title.textContent='Great job, Rooh!';text.innerHTML=`You earned:<br><span style="font-size:1rem;">${r}</span><br>${rewards}/8`;btn.textContent=i<levels.length-1?'Next ▶':'Finish';overlay.classList.remove('hidden');speak(`Awesome, Rooh, you earned ${r}`);}
+    function victory(){mode='victory';title.textContent='🏆 Explorer Supreme, Rooh!';text.textContent='All quests complete!';btn.textContent='Play Again';overlay.classList.remove('hidden');bar.style.width='100%';banner.textContent='Congratulations, Rooh!';i=0;rewards=0;msg.innerHTML='<h2>You conquered the jungle!</h2>';speak('Congratulations, Rooh, you are a master builder!');}
+    function showTut(l){mode='tutorial';title.textContent=`Quest ${i+1}`;text.innerHTML=`Tap blocks that <strong>${l.pattern.startsWith('-')?'end with':'start with'}</strong> “${l.pattern.replace(/-/g,'')}”.<br>Example: <span class='example-word'>${l.example}</span>`;btn.textContent="Let's Go, Rooh!";overlay.classList.remove('hidden');speak(`Rooh, find ${l.pattern} blocks!`);}    
+    function update(){bar.style.width=(rescued/levels[i].correct.length)*100+'%';}
+    function flash(){banner.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}],{duration:600});}
+    const shuffle=a=>a.sort(()=>Math.random()-.5);
+    // TTS setup
+    let voices=[];
+    function loadVoices(){voices=speechSynthesis.getVoices();}
+    if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=loadVoices;loadVoices();}
+    function speak(txt){
+      if(!('speechSynthesis' in window))return;
+      const u=new SpeechSynthesisUtterance(txt);
+      u.rate=0.9;
+      u.pitch=1.0;
+      if(voices.length){
+        let v=voices.find(v=>/Google US English|Microsoft David|male/i.test(v.name));
+        if(!v) v=voices[0];
+        u.voice=v;
+      }
+      window.speechSynthesis.speak(u);
+    }
+  })();
+  </script>
+</body>
+</html>
