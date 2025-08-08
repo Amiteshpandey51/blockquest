@@ -1,11 +1,11 @@
-<!-- BlockQuest for Rooh – v12: Fixed TTS Loading with Softer Male Voice -->
+<!-- BlockQuest for Rooh – v13: Adjusted 'Rooh' placement per request -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BlockQuest for Rooh v12</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlockQuest for Rooh v13</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     :root { --primary:#3c5c1d; --accent:#fdd835; --bg-sky:#81d4fa; --bg-block:#8d6e63; --correct:#a5d6a7; --wrong:#ef9a9a; }
     *{box-sizing:border-box;margin:0;padding:0;}
@@ -18,7 +18,7 @@
     #target-banner{background:var(--correct);color:#000;text-align:center;padding:4px 8px;border-top:4px solid #000;border-bottom:4px solid #000;font-size:8px;}
     button{font-family:inherit;font-size:8px;padding:4px 8px;background:var(--accent);color:#000;border:4px solid #000;cursor:pointer;}
     button:hover{background:#ffca28;}
-    #overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;z-index:1000;}
+    #overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;z-index:1000;}
     #overlay.hidden{display:none;}
     .overlay-box{width:84%;max-width:460px;height:90vh;background:var(--bg-block);border:4px solid #000;display:flex;flex-direction:column;}
     .overlay-body{flex:1;padding:16px;overflow:auto;color:#fff;font-size:8px;text-align:center;}
@@ -45,69 +45,159 @@
           <h2 id="overlay-title">Quest</h2>
           <p id="overlay-text"></p>
         </div>
-        <div class="overlay-footer"><button id="overlay-btn">Let's Go, Rooh!</button></div>
+        <div class="overlay-footer">
+          <button id="overlay-btn">Let's Go, Rooh!</button>
+        </div>
       </div>
     </div>
     <div id="message">
       <h2>Welcome to <span style="color:var(--accent);">BlockQuest!</span></h2>
-      <p>Find & tap matching blocks to collect resources.</p>
+      <p>Find &amp; tap matching blocks to collect resources.</p>
       <button id="start-btn">Start Quest</button>
     </div>
     <div id="card-grid" style="display:none;"></div>
   </div>
   <script>
-  (function(){
-    const levels=[
-      {pattern:'-at',correct:['cat','bat','hat','rat','mat'],distractors:['dog','sun','pen','box','gum'],example:'cat',reward:'Diamond 💎'},
-      {pattern:'-og',correct:['dog','fog','log','hog','jog'],distractors:['cat','sun','pen','bat','rat'],example:'dog',reward:'Emerald 💚'},
-      {pattern:'sh-',correct:['ship','shop','shell','shoe','shine'],distractors:['cat','dog','win','book','rat'],example:'ship',reward:'Golden Apple 🍎'},
-      {pattern:'-ake',correct:['cake','bake','lake','snake','shake'],distractors:['dog','log','rat','sun','pin'],example:'cake',reward:'Redstone 🔴'},
-      {pattern:'spr-',correct:['spring','sprout','spray','spread','spruce'],distractors:['ring','prout','pray','bread','juice'],example:'spring',reward:'Nether Star ⭐'},
-      {pattern:'th-',correct:['this','that','thin','thorn','think'],distractors:['cat','sun','pen','bat','rat'],example:'this',reward:'Iron Ingot ⚙️'},
-      {pattern:'str-',correct:['street','stream','strong','strike','strap'],distractors:['est','og','ake','spr','th'],example:'street',reward:'Obsidian 🖤'},
-      {pattern:'-est',correct:['best','nest','rest','test','jest'],distractors:['cat','dog','ship','cake','spring'],example:'best',reward:'Dragon Egg 🥚'}
+  (function() {
+    const levels = [
+      {pattern:'-at', correct:['cat','bat','hat','rat','mat'], distractors:['dog','sun','pen','box','gum'], example:'cat', reward:'Diamond 💎'},
+      {pattern:'-og', correct:['dog','fog','log','hog','jog'], distractors:['cat','sun','pen','bat','rat'], example:'dog', reward:'Emerald 💚'},
+      {pattern:'sh-', correct:['ship','shop','shell','shoe','shine'], distractors:['cat','dog','win','book','rat'], example:'ship', reward:'Golden Apple 🍎'},
+      {pattern:'-ake', correct:['cake','bake','lake','snake','shake'], distractors:['dog','log','rat','sun','pin'], example:'cake', reward:'Redstone 🔴'},
+      {pattern:'spr-', correct:['spring','sprout','spray','spread','spruce'], distractors:['ring','prout','pray','bread','juice'], example:'spring', reward:'Nether Star ⭐'},
+      {pattern:'th-', correct:['this','that','thin','thorn','think'], distractors:['cat','sun','pen','bat','rat'], example:'this', reward:'Iron Ingot ⚙️'},
+      {pattern:'str-', correct:['street','stream','strong','strike','strap'], distractors:['est','og','ake','spr','th'], example:'street', reward:'Obsidian 🖤'},
+      {pattern:'-est', correct:['best','nest','rest','test','jest'], distractors:['cat','dog','ship','cake','spring'], example:'best', reward:'Dragon Egg 🥚'}
     ];
-    let i=0,rescued=0,rewards=0,mode='tutorial';
-    const q=s=>document.querySelector(s);
-    const lbl=q('#level-label'),bar=q('#progress-bar'),banner=q('#target-banner');
-    const grid=q('#card-grid'),msg=q('#message'),overlay=q('#overlay');
-    const title=q('#overlay-title'),text=q('#overlay-text'),btn=q('#overlay-btn');
-    q('#start-btn').onclick=start;btn.onclick=action;
-    function action(){
-      if(mode==='tutorial'){
-        overlay.classList.add('hidden');grid.style.display='grid';speak("Yo Rooh, let's go!");flash();
-      } else if(mode==='reward'){
+    let i = 0, rescued = 0, rewards = 0, mode = 'tutorial';
+    const q = s => document.querySelector(s);
+    const lbl = q('#level-label'), bar = q('#progress-bar'), banner = q('#target-banner');
+    const grid = q('#card-grid'), msg = q('#message'), overlay = q('#overlay');
+    const title = q('#overlay-title'), text = q('#overlay-text'), btn = q('#overlay-btn');
+    q('#start-btn').onclick = start; btn.onclick = action;
+
+    function action() {
+      if (mode === 'tutorial') {
         overlay.classList.add('hidden');
-        if(i<levels.length-1){i++;start();}else{victory();}
+        grid.style.display = 'grid';
+        speak("Let's go, Rooh!");
+        flash();
+      } else if (mode === 'reward') {
+        overlay.classList.add('hidden');
+        if (i < levels.length - 1) { i++; start(); } else { victory(); }
       } else {
-        overlay.classList.add('hidden');msg.style.display='block';
+        overlay.classList.add('hidden');
+        msg.style.display = 'block';
       }
     }
-    function start(){rescued=0;update();const l=levels[i];lbl.textContent=`Level ${i+1}`;banner.textContent=`Rooh, find ${l.pattern} blocks`;build(l);showTut(l);msg.style.display='none';grid.style.display='none';}
-    function build(l){grid.innerHTML='';shuffle([...l.correct,...l.distractors]).forEach(w=>{const c=document.createElement('div');c.className='card';c.textContent=w;c.onclick=()=>tap(c,w,l);grid.appendChild(c);});}
-    function tap(c,w,l){if(c.dataset.lock)return;if(l.correct.includes(w)){c.classList.add('correct');c.dataset.lock=1;speak(`Correct, Rooh! ${w}`);rescued++;update();if(rescued===l.correct.length){rewards++;give();}}else{c.classList.add('wrong');speak('Oops, try again Rooh');setTimeout(()=>c.classList.remove('wrong'),600);}}
-    function give(){mode='reward';const r=levels[i].reward;title.textContent='Great job, Rooh!';text.innerHTML=`You earned:<br><span style="font-size:1rem;">${r}</span><br>${rewards}/8`;btn.textContent=i<levels.length-1?'Next ▶':'Finish';overlay.classList.remove('hidden');speak(`Awesome, Rooh, you earned ${r}`);}
-    function victory(){mode='victory';title.textContent='🏆 Explorer Supreme, Rooh!';text.textContent='All quests complete!';btn.textContent='Play Again';overlay.classList.remove('hidden');bar.style.width='100%';banner.textContent='Congratulations, Rooh!';i=0;rewards=0;msg.innerHTML='<h2>You conquered the jungle!</h2>';speak('Congratulations, Rooh, you are a master builder!');}
-    function showTut(l){mode='tutorial';title.textContent=`Quest ${i+1}`;text.innerHTML=`Tap blocks that <strong>${l.pattern.startsWith('-')?'end with':'start with'}</strong> “${l.pattern.replace(/-/g,'')}”.<br>Example: <span class='example-word'>${l.example}</span>`;btn.textContent="Let's Go, Rooh!";overlay.classList.remove('hidden');speak(`Rooh, find ${l.pattern} blocks!`);}    
-    function update(){bar.style.width=(rescued/levels[i].correct.length)*100+'%';}
-    function flash(){banner.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}],{duration:600});}
-    const shuffle=a=>a.sort(()=>Math.random()-.5);
+
+    function start() {
+      rescued = 0;
+      update();
+      const l = levels[i];
+      lbl.textContent = `Level ${i+1}`;
+      banner.textContent = `Rooh, find ${l.pattern} blocks`;
+      build(l);
+      showTut(l);
+      msg.style.display = 'none';
+      grid.style.display = 'none';
+    }
+
+    function build(l) {
+      grid.innerHTML = '';
+      shuffle([...l.correct, ...l.distractors]).forEach(w => {
+        const c = document.createElement('div');
+        c.className = 'card';
+        c.textContent = w;
+        c.onclick = () => tap(c, w, l);
+        grid.appendChild(c);
+      });
+    }
+
+    function tap(c, w, l) {
+      if (c.dataset.lock) return;
+      if (l.correct.includes(w)) {
+        c.classList.add('correct');
+        c.dataset.lock = '1';
+        speak(`Correct! ${w}`);
+        rescued++;
+        update();
+        if (rescued === l.correct.length) { rewards++; give(); }
+      } else {
+        c.classList.add('wrong');
+        speak('Oops, try again');
+        setTimeout(() => c.classList.remove('wrong'), 600);
+      }
+    }
+
+    function give() {
+      mode = 'reward';
+      const r = levels[i].reward;
+      title.textContent = 'Great job!';
+      text.innerHTML = `You have won:<br><span style="font-size:1rem;">${r}</span><br>${rewards}/8`;
+      btn.textContent = i < levels.length - 1 ? 'Next ▶' : 'Finish';
+      overlay.classList.remove('hidden');
+      speak(`Rooh, you have won this! ${r}`);
+    }
+
+    function victory() {
+      mode = 'victory';
+      title.textContent = '🏆 Explorer Supreme!';
+      text.textContent = 'All quests complete!';
+      btn.textContent = 'Play Again';
+      overlay.classList.remove('hidden');
+      bar.style.width = '100%';
+      banner.textContent = 'Congratulations!';
+      i = 0; rewards = 0;
+      msg.innerHTML = '<h2>You conquered the jungle!</h2>';
+      speak('Rooh, you have won this! You are a master builder!');
+    }
+
+    function showTut(l) {
+      mode = 'tutorial';
+      title.textContent = `Quest ${i+1}`;
+      text.innerHTML = `Tap blocks that <strong>${l.pattern.startsWith('-') ? 'end with' : 'start with'}</strong> "${l.pattern}".<br>Example: <span class='example-word'>${l.example}</span>`;
+      btn.textContent = "Let's Go, Rooh!";
+      overlay.classList.remove('hidden');
+      speak(`Let's go, Rooh!`);
+    }
+
+    function update() {
+      bar.style.width = (rescued / levels[i].correct.length) * 100 + '%';
+    }
+
+    function flash() {
+      banner.animate([
+        { transform: 'scale(1)' },
+        { transform: 'scale(1.1)' },
+        { transform: 'scale(1)' }
+      ], { duration: 600 });
+    }
+
+    const shuffle = a => a.sort(() => Math.random() - 0.5);
+
     // TTS setup
-    let voices=[];
-    function loadVoices(){voices=speechSynthesis.getVoices();}
-    if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=loadVoices;loadVoices();}
-    function speak(txt){
-      if(!('speechSynthesis' in window))return;
-      const u=new SpeechSynthesisUtterance(txt);
-      u.rate=0.9;
-      u.pitch=1.0;
-      if(voices.length){
-        let v=voices.find(v=>/Google US English|Microsoft David|male/i.test(v.name));
-        if(!v) v=voices[0];
-        u.voice=v;
-      }
-      window.speechSynthesis.speak(u);
+    let voices = [];
+    function loadVoices() {
+      voices = window.speechSynthesis.getVoices();
     }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+      loadVoices();
+    }
+
+    function speak(txt) {
+      if (!('speechSynthesis' in window)) return;
+      const utter = new SpeechSynthesisUtterance(txt);
+      utter.rate = 1.1;
+      utter.pitch = 1.2;
+      if (voices.length) {
+        const preferred = voices.find(v => /Google UK English Female|Microsoft Zira|Samantha/i.test(v.name));
+        utter.voice = preferred || voices[0];
+      }
+      window.speechSynthesis.speak(utter);
+    }
+
   })();
   </script>
 </body>
