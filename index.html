@@ -1,41 +1,42 @@
-<!-- BlockQuest for Rooh – v10: Final Frontier multi-blank level, remove dyslexia -->
+<!-- BlockQuest for Rooh – v8: 8-Level Game (Removed Final Frontier) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BlockQuest for Rooh v10</title>
+  <title>BlockQuest for Rooh v8</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
     :root { --primary:#3c5c1d; --accent:#fdd835; --bg-sky:#81d4fa; --bg-block:#8d6e63; --correct:#a5d6a7; --wrong:#ef9a9a; }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:'Press Start 2P',monospace; background:var(--bg-sky); display:flex; justify-content:center; align-items:center; height:100vh; user-select:none; }
-    #game { width:92vmin; max-width:680px; background:var(--bg-block); border:4px solid #000; display:flex; flex-direction:column; }
-    #header { background:var(--primary); color:#fff; padding:8px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:4px solid #000; }
-    #level-label { font-size:10px; }
-    #progress { width:160px; height:12px; background:#1b5e20; border:4px solid #000; }
-    #progress-bar { height:100%; width:0; background:var(--accent); transition:width .3s; }
-    #target-banner { background:var(--correct); color:#000; text-align:center; padding:4px 8px; border-top:4px solid #000; border-bottom:4px solid #000; font-size:8px; }
-    button { font-family:inherit; font-size:8px; padding:4px 8px; background:var(--accent); color:#000; border:4px solid #000; cursor:pointer; }
-    button:hover { background:#ffca28; }
-    #overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; z-index:1000; }
-    #overlay.hidden { display:none; }
-    .overlay-box { width:84%; max-width:460px; height:90vh; background:var(--bg-block); border:4px solid #000; display:flex; flex-direction:column; }
-    .overlay-body { flex:1; padding:16px; overflow:auto; color:#fff; font-size:8px; text-align:center; }
-    .overlay-footer { padding:8px; border-top:4px solid #000; text-align:center; }
-    .example-word { color:var(--accent); }
-    #card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr)); gap:8px; padding:8px; background:#795548; flex:1; overflow:auto; }
-    .card { background:#eee; border:4px solid #000; height:60px; display:flex; justify-content:center; align-items:center; font-size:8px; color:#000; cursor:pointer; }
-    .card.correct { background:var(--correct); }
-    .card.wrong   { background:var(--wrong); }
-    #message { padding:16px; color:#fff; font-size:8px; text-align:center; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Press Start 2P',monospace;background:var(--bg-sky);display:flex;justify-content:center;align-items:center;height:100vh;user-select:none;}
+    #game{width:92vmin;max-width:680px;background:var(--bg-block);border:4px solid #000;display:flex;flex-direction:column;}
+    #header{background:var(--primary);color:#fff;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid #000;}
+    #level-label{font-size:10px;}
+    #progress{width:160px;height:12px;background:#1b5e20;border:4px solid #000;}
+    #progress-bar{height:100%;width:0;background:var(--accent);transition:width .3s;}
+    #target-banner{background:var(--correct);color:#000;text-align:center;padding:4px 8px;border-top:4px solid #000;border-bottom:4px solid #000;font-size:8px;}
+    button{font-family:inherit;font-size:8px;padding:4px 8px;background:var(--accent);color:#000;border:4px solid #000;cursor:pointer;}
+    button:hover{background:#ffca28;}
+    #overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;z-index:1000;}
+    #overlay.hidden{display:none;}
+    .overlay-box{width:84%;max-width:460px;height:90vh;background:var(--bg-block);border:4px solid #000;display:flex;flex-direction:column;}
+    .overlay-body{flex:1;padding:16px;overflow:auto;color:#fff;font-size:8px;text-align:center;}
+    .overlay-body h2{margin-bottom:12px;}
+    .overlay-body p{line-height:1.4;}
+    .overlay-footer{padding:8px;border-top:4px solid #000;text-align:center;}
+    .example-word{color:var(--accent);}
+    #card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;padding:8px;background:#795548;flex:1;overflow:auto;}
+    .card{background:#eee;border:4px solid #000;height:60px;display:flex;justify-content:center;align-items:center;font-size:8px;color:#000;cursor:pointer;}
+    .card.correct{background:var(--correct);} .card.wrong{background:var(--wrong);}
+    #message{text-align:center;padding:28px;color:#fff;font-size:8px;}
   </style>
 </head>
 <body>
   <div id="game">
     <div id="header">
-      <div id="level-label">BlockQuest for Rooh (9 Levels)</div>
-      <div id="progress"><div id="progress-bar"></div></div>
+      <div id="level-label">BlockQuest for Rooh (8 Levels)</div>
+      <div style="display:flex;align-items:center;gap:4px;"><div id="progress"><div id="progress-bar"></div></div></div>
     </div>
     <div id="target-banner">Welcome Rooh! Tap <strong>Start</strong> to begin.</div>
     <div id="overlay" class="hidden">
@@ -49,7 +50,7 @@
     </div>
     <div id="message">
       <h2>Welcome to <span style="color:var(--accent);">BlockQuest!</span></h2>
-      <p>Find & tap blocks or fill blanks to earn resources and level up.</p>
+      <p>Find & tap matching blocks to collect resources.</p>
       <button id="start-btn">Start Quest</button>
     </div>
     <div id="card-grid" style="display:none;"></div>
@@ -57,79 +58,32 @@
   <script>
   (function(){
     const levels=[
-      {pattern:'-at', correct:['cat','bat','hat','rat','mat'], distractors:['dog','sun','pen','box','gum'], example:'cat', reward:'Diamond 💎'},
-      {pattern:'-og', correct:['dog','fog','log','hog','jog'], distractors:['cat','sun','pen','bat','rat'], example:'dog', reward:'Emerald 💚'},
-      {pattern:'sh-', correct:['ship','shop','shell','shoe','shine'], distractors:['cat','dog','win','book','rat'], example:'ship', reward:'Golden Apple 🍎'},
-      {pattern:'-ake',correct:['cake','bake','lake','snake','shake'], distractors:['dog','log','rat','sun','pin'], example:'cake', reward:'Redstone 🔴'},
-      {pattern:'spr-',correct:['spring','sprout','spray','spread','spruce'], distractors:['ring','prout','pray','bread','juice'], example:'spring', reward:'Nether Star ⭐'},
-      {pattern:'th-', correct:['this','that','thin','thorn','think'], distractors:['cat','sun','pen','bat','rat'], example:'this', reward:'Iron Ingot ⚙️'},
-      {pattern:'str-',correct:['street','stream','strong','strike','strap'], distractors:['est','og','ake','spr','th'], example:'street', reward:'Obsidian 🖤'},
-      {pattern:'-est',correct:['best','nest','rest','test','jest'], distractors:['cat','dog','ship','cake','spring'], example:'best', reward:'Dragon Egg 🥚'},
-      { // Level 9: Final Frontier multi-blank
-        sentence:'The brave ___ ship will ___ on the ___ frontier!',
-        blanks:['ship','rest','log'],
-        options:[
-          ['ship','shed','shoe'],
-          ['rest','nest','rent'],
-          ['log','dog','fog']
-        ],
-        reward:'Galaxy Trophy 🏆'
-      }
+      {pattern:'-at',correct:['cat','bat','hat','rat','mat'],distractors:['dog','sun','pen','box','gum'],example:'cat',reward:'Diamond 💎'},
+      {pattern:'-og',correct:['dog','fog','log','hog','jog'],distractors:['cat','sun','pen','bat','rat'],example:'dog',reward:'Emerald 💚'},
+      {pattern:'sh-',correct:['ship','shop','shell','shoe','shine'],distractors:['cat','dog','win','book','rat'],example:'ship',reward:'Golden Apple 🍎'},
+      {pattern:'-ake',correct:['cake','bake','lake','snake','shake'],distractors:['dog','log','rat','sun','pin'],example:'cake',reward:'Redstone 🔴'},
+      {pattern:'spr-',correct:['spring','sprout','spray','spread','spruce'],distractors:['ring','prout','pray','bread','juice'],example:'spring',reward:'Nether Star ⭐'},
+      {pattern:'th-',correct:['this','that','thin','thorn','think'],distractors:['cat','sun','pen','bat','rat'],example:'this',reward:'Iron Ingot ⚙️'},
+      {pattern:'str-',correct:['street','stream','strong','strike','strap'],distractors:['est','og','ake','spr','th'],example:'street',reward:'Obsidian 🖤'},
+      {pattern:'-est',correct:['best','nest','rest','test','jest'],distractors:['cat','dog','ship','cake','spring'],example:'best',reward:'Dragon Egg 🥚'}
     ];
-    let idx=0, blankIdx=0, voiceCache=[], mode='tutorial';
-    // load voices once
-    function loadVoices(){voiceCache=speechSynthesis.getVoices(); if(!voiceCache.length) speechSynthesis.onvoiceschanged=()=>voiceCache=speechSynthesis.getVoices();}
-    if('speechSynthesis' in window) loadVoices();
+    let i=0,rescued=0,rewards=0,mode='tutorial';
     const q=s=>document.querySelector(s);
-    const lvlLbl=q('#level-label'), pbar=q('#progress-bar'), banner=q('#target-banner');
-    const grid=q('#card-grid'), msg=q('#message'), ov=q('#overlay');
-    const ot=q('#overlay-title'), ox=q('#overlay-text'), ob=q('#overlay-btn');
-    q('#start-btn').onclick=startQuest; ob.onclick=overlayAction;
-
-    function overlayAction(){
-      if(mode==='tutorial'){
-        ov.classList.add('hidden'); grid.style.display='grid'; speak("Yo Rooh, let's go!"); animate();
-      } else if(mode==='reward'){
-        ov.classList.add('hidden'); if(idx<levels.length-1){ idx++; startQuest(); } else victory();
-      } else {ov.classList.add('hidden'); msg.style.display='block';}
-    }
-    function startQuest(){ blankIdx=0; pbar.style.width='0%'; const l=levels[idx]; lvlLbl.textContent=`Level ${idx+1}`;
-      if(l.sentence){ banner.textContent='Final Frontier'; }
-      else{ banner.innerHTML=`Find <strong>${l.pattern}</strong> blocks, Rooh!`; }
-      populate(l); showTutorial(l); msg.style.display='none'; grid.style.display='none';
-    }
-    function populate(l){ grid.innerHTML=''; if(l.sentence){
-        l.options[blankIdx].forEach(opt=>{ const c=document.createElement('div'); c.className='card'; c.textContent=opt; c.onclick=()=>handleBlank(c,opt,l); grid.appendChild(c); });
-      } else{
-        shuffle([...l.correct,...l.distractors]).forEach(w=>{ const c=document.createElement('div'); c.className='card'; c.textContent=w; c.onclick=()=>handleTap(c,w,l); grid.appendChild(c); });
-      }}
-    function handleTap(card,w,l){ if(card.dataset.lock) return;
-      if(l.correct.includes(w)){ card.classList.add('correct'); card.dataset.lock='1'; speak(`Correct! ${w}`);
-        updateProgress((++blankIdx)/l.correct.length);
-        if(blankIdx===l.correct.length) showReward();
-      } else{ card.classList.add('wrong'); speak('Oops, try again'); setTimeout(()=>card.classList.remove('wrong'),600);} }
-    function handleBlank(card,choice,l){ if(card.dataset.lock) return;
-      if(choice===l.blanks[blankIdx]){
-        card.classList.add('correct'); card.dataset.lock='1'; speak(`Correct! ${choice}`);
-        blankIdx++;
-        updateProgress(blankIdx/l.blanks.length);
-        if(blankIdx<l.blanks.length){ setTimeout(()=>{ populate(l); },500);
-        } else{ showReward(); }
-      } else{ card.classList.add('wrong'); speak('Oops, try again'); setTimeout(()=>card.classList.remove('wrong'),600);} }
-    function showReward(){ mode='reward'; const r=levels[idx].reward;
-      ot.textContent='Reward!';
-      ox.innerHTML=`<span style="font-size:1rem;">${r}</span><br>Collected!`;
-      ob.textContent= idx<levels.length-1?'Next ▶':'Finish'; ov.classList.remove('hidden'); speak(`Awesome Rooh, you earned ${r}`);
-    }
-    function victory(){ mode='victory'; ot.textContent='🏆 Champion!'; ox.textContent='All quests complete!'; ob.textContent='Play Again'; ov.classList.remove('hidden'); pbar.style.width='100%'; banner.textContent='Completed!'; idx=0; msg.innerHTML='<h2>Congrats, Rooh!</h2>'; speak('You are a master builder!'); }
-    function showTutorial(l){ mode='tutorial'; if(l.sentence){ ot.textContent='Final Frontier'; ox.innerHTML=`Fill in the blank ${blankIdx+1}/${l.blanks.length}:<br>${l.sentence}`; ob.textContent="Let's Go, Rooh!"; }
-      else{ ot.textContent=`Quest ${idx+1}`; ox.innerHTML=`Tap blocks that <strong>${l.pattern.startsWith('-')?'end with':'start with'}</strong> "${l.pattern}".<br>Ex: <span class='example-word'>${l.example}</span>`; ob.textContent="Let's Go, Rooh!"; }
-      ov.classList.remove('hidden'); speak(l.sentence?`Yo Rooh, fill blank ${blankIdx+1}`:`Yo Rooh, find ${l.pattern} blocks.`);
-    }
-    function updateProgress(frac){ pbar.style.width=`${frac*100}%`; }
-    function animate(){ banner.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}],{duration:600}); }
-    function speak(t){ if(!('speechSynthesis' in window))return; const u=new SpeechSynthesisUtterance(t); u.rate=1.1; u.pitch=1.2; if(voiceCache.length){ const v=voiceCache.find(v=>/Google UK English Male|Microsoft David/i.test(v.name)); if(v)u.voice=v;} speechSynthesis.speak(u);}  
-    const shuffle=a=>a.sort(()=>Math.random()-0.5);
+    const lbl=q('#level-label'),bar=q('#progress-bar'),banner=q('#target-banner');
+    const grid=q('#card-grid'),msg=q('#message'),overlay=q('#overlay');
+    const title=q('#overlay-title'),text=q('#overlay-text'),btn=q('#overlay-btn');
+    q('#start-btn').onclick=start;btn.onclick=action;
+    function action(){if(mode==='tutorial'){overlay.classList.add('hidden');grid.style.display='grid';flash();}else if(mode==='reward'){overlay.classList.add('hidden');if(i<levels.length-1){i++;start()}else victory();}else{overlay.classList.add('hidden');msg.style.display='block';}}    
+    function start(){rescued=0;update();const l=levels[i];lbl.textContent=`Level ${i+1}`;banner.innerHTML=`Find <strong>${l.pattern}</strong> blocks`;build(l);showTut(l);msg.style.display='none';grid.style.display='none';}
+    function build(l){grid.innerHTML='';shuffle([...l.correct,...l.distractors]).forEach(w=>{const c=document.createElement('div');c.className='card';c.textContent=w;c.onclick=()=>tap(c,w,l);grid.appendChild(c);});}
+    function tap(c,w,l){if(c.dataset.lock)return;if(l.correct.includes(w)){c.classList.add('correct');c.dataset.lock=1;rescued++;update();speak(w);if(rescued===l.correct.length){rewards++;give();}}else{c.classList.add('wrong');speak('Try again');setTimeout(()=>c.classList.remove('wrong'),600);}}
+    function give(){mode='reward';const r=levels[i].reward;title.textContent='Great job!';text.innerHTML=`You earned:<br><span style="font-size:1rem;">${r}</span><br>${rewards}/8 rewards`;btn.textContent=i<levels.length-1?'Next ▶':'Finish';overlay.classList.remove('hidden');speak('Great job');}
+    function victory(){mode='victory';title.textContent='🏆 Explorer Supreme!';text.textContent='All done!';btn.textContent='Play Again';overlay.classList.remove('hidden');bar.style.width='100%';banner.textContent='Completed!';i=0;rewards=0;msg.innerHTML='<h2>You conquered the jungle!</h2>';}    
+    function showTut(l){mode='tutorial';title.textContent=`Quest ${i+1}`;text.innerHTML=`Tap blocks that <strong>${l.pattern.startsWith('-')?'end with':'start with'}</strong> “${l.pattern.replace(/-/g,'')}”.<br>Example: <span class='example-word'>${l.example}</span>`;btn.textContent="Let's Go!";overlay.classList.remove('hidden');speak(`Find words with ${l.pattern}`);}    
+    function update(){bar.style.width=(rescued/levels[i].correct.length)*100+'%';}
+    function flash(){banner.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}],{duration:600});}
+    function shuffle(a){return a.sort(()=>Math.random()-.5);}    
+    function speak(t){if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(t);window.speechSynthesis.speak(u);}}  
   })();
   </script>
 </body>
