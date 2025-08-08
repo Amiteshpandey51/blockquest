@@ -1,10 +1,10 @@
-<!-- BlockQuest for Rooh – v8: 8-Level Game (Removed Final Frontier) -->
+<!-- BlockQuest for Rooh – v11: Re-add Rooh calls & softer male TTS -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BlockQuest for Rooh v8</title>
+  <title>BlockQuest for Rooh v11</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
     :root { --primary:#3c5c1d; --accent:#fdd835; --bg-sky:#81d4fa; --bg-block:#8d6e63; --correct:#a5d6a7; --wrong:#ef9a9a; }
@@ -28,7 +28,7 @@
     .example-word{color:var(--accent);}
     #card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;padding:8px;background:#795548;flex:1;overflow:auto;}
     .card{background:#eee;border:4px solid #000;height:60px;display:flex;justify-content:center;align-items:center;font-size:8px;color:#000;cursor:pointer;}
-    .card.correct{background:var(--correct);} .card.wrong{background:var(--wrong);}
+    .card.correct{background:var(--correct);} .card.wrong{background:var(--wrong);}  
     #message{text-align:center;padding:28px;color:#fff;font-size:8px;}
   </style>
 </head>
@@ -36,9 +36,9 @@
   <div id="game">
     <div id="header">
       <div id="level-label">BlockQuest for Rooh (8 Levels)</div>
-      <div style="display:flex;align-items:center;gap:4px;"><div id="progress"><div id="progress-bar"></div></div></div>
+      <div id="progress"><div id="progress-bar"></div></div>
     </div>
-    <div id="target-banner">Welcome Rooh! Tap <strong>Start</strong> to begin.</div>
+    <div id="target-banner">Rooh, tap <strong>Start Quest</strong> to begin.</div>
     <div id="overlay" class="hidden">
       <div class="overlay-box">
         <div class="overlay-body">
@@ -73,18 +73,17 @@
     const grid=q('#card-grid'),msg=q('#message'),overlay=q('#overlay');
     const title=q('#overlay-title'),text=q('#overlay-text'),btn=q('#overlay-btn');
     q('#start-btn').onclick=start;btn.onclick=action;
-    function action(){if(mode==='tutorial'){overlay.classList.add('hidden');grid.style.display='grid';flash();}else if(mode==='reward'){overlay.classList.add('hidden');if(i<levels.length-1){i++;start()}else victory();}else{overlay.classList.add('hidden');msg.style.display='block';}}    
-    function start(){rescued=0;update();const l=levels[i];lbl.textContent=`Level ${i+1}`;banner.innerHTML=`Rooh, find <strong>${l.pattern}</strong> blocks`;build(l);showTut(l);msg.style.display='none';grid.style.display='none';}
+    function action(){
+      if(mode==='tutorial'){
+        overlay.classList.add('hidden');grid.style.display='grid';speak("Yo Rooh, let's go!");flash();
+      } else if(mode==='reward'){
+        overlay.classList.add('hidden');
+        if(i<levels.length-1){i++;start();}else{victory();}
+      } else {
+        overlay.classList.add('hidden');msg.style.display='block';
+      }
+    }
+    function start(){rescued=0;update();const l=levels[i];lbl.textContent=`Level ${i+1}`;banner.textContent=`Rooh, find ${l.pattern} blocks`;build(l);showTut(l);msg.style.display='none';grid.style.display='none';}
     function build(l){grid.innerHTML='';shuffle([...l.correct,...l.distractors]).forEach(w=>{const c=document.createElement('div');c.className='card';c.textContent=w;c.onclick=()=>tap(c,w,l);grid.appendChild(c);});}
-    function tap(c,w,l){if(c.dataset.lock)return;if(l.correct.includes(w)){c.classList.add('correct');c.dataset.lock=1;rescued++;update();speak(w);if(rescued===l.correct.length){rewards++;give();}}else{c.classList.add('wrong');speak('Try again');setTimeout(()=>c.classList.remove('wrong'),600);}}
-    function give(){mode='reward';const r=levels[i].reward;title.textContent='Great job, Rooh!';text.innerHTML=`You earned:<br><span style="font-size:1rem;">${r}</span><br>${rewards}/8 rewards`;btn.textContent=i<levels.length-1?'Next ▶':'Finish';overlay.classList.remove('hidden');speak('Great job');}
-    function victory(){mode='victory';title.textContent='🏆 Explorer Supreme!';text.textContent='All done!';btn.textContent='Play Again';overlay.classList.remove('hidden');bar.style.width='100%';banner.textContent='Completed!';i=0;rewards=0;msg.innerHTML='<h2>You conquered the jungle!</h2>';}    
-    function showTut(l){mode='tutorial';title.textContent=`Quest ${i+1}`;text.innerHTML=`Tap blocks that <strong>${l.pattern.startsWith('-')?'end with':'start with'}</strong> “${l.pattern.replace(/-/g,'')}”.<br>Example: <span class='example-word'>${l.example}</span>`;btn.textContent="Let's Go, Rooh!";overlay.classList.remove('hidden');speak(`Find words with ${l.pattern}`);}    
-    function update(){bar.style.width=(rescued/levels[i].correct.length)*100+'%';}
-    function flash(){banner.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}],{duration:600});}
-    function shuffle(a){return a.sort(()=>Math.random()-.5);}    
-    function speak(t){if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(t);window.speechSynthesis.speak(u);}}  
-  })();
-  </script>
-</body>
-</html>
+    function tap(c,w,l){if(c.dataset.lock)return;if(l.correct.includes(w)){c.classList.add('correct');c.dataset.lock=1;speak(`Correct, Rooh! ${w}`);rescued++;update();if(rescued===l.correct.length){rewards++;give();}}else{c.classList.add('wrong');speak('Oops, try again Rooh');setTimeout(()=>c.classList.remove('wrong'),600);}}
+    function give(){mode='reward';const r=levels[i].reward;title.textContent='Great job, Rooh!';text.innerHTML=`You earned:<br><span style=\
